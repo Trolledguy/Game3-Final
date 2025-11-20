@@ -1,24 +1,38 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// Example enemy AI that uses the advanced AI controller
 /// Demonstrates patrol, chase, and attack behaviors
 /// </summary>
-public class EnemyAI : MonoBehaviour
+
+
+public abstract class AIAutoControl : Entity , ICharacter
 {
     public enum AIState { Patrolling, Chasing, Attacking, Idle }
     
+
+    [Header("AI Stats")]
+    public int maxHealth { get; set; } = 50;
+    public int currentHealth { get; set; } = 50;
+    public int baseAttackDamage { get; set; } = 5;
+    public float moveSpeed = 3f;
+
     [Header("References")]
     [SerializeField] private AdvancedAIController navigationController;
     [SerializeField] private Transform[] patrolWaypoints;
     
     [Header("Detection")]
     [SerializeField] private float detectionRange = 15f;
-    [SerializeField] private string targetTag = "Player";
+    [SerializeField] private string targetTag = "Player"; // Tag of the target to detect Change later
     
-    [Header("Attack")]
+    [Header("Attack Mechanics")]
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float attackCooldown = 1f;
+
+
+
+
     
     private AIState currentState = AIState.Patrolling;
     private int currentWaypointIndex = 0;
@@ -46,6 +60,8 @@ public class EnemyAI : MonoBehaviour
             detectionCounter = detectionTimer;
         }
 
+        Debug.Log("Current State: " + currentState.ToString());
+        Debug.Log($"Path Progress : {navigationController.GetPathProgress()}");
         switch (currentState)
         {
             case AIState.Patrolling:
@@ -63,7 +79,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void DetectTarget()
+    protected virtual void DetectTarget()
     {
         // Find target in range
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRange);
@@ -93,7 +109,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void PatrolBehavior()
+    protected virtual void PatrolBehavior()
     {
         if (patrolWaypoints.Length == 0)
         {
@@ -106,11 +122,12 @@ public class EnemyAI : MonoBehaviour
 
         if (navigationController.HasReachedTarget())
         {
+            Debug.Log( this.name + "Reached waypoint : " + currentWaypointIndex);
             currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Length;
         }
     }
 
-    private void ChaseBehavior()
+    protected virtual void ChaseBehavior()
     {
         if (targetEnemy == null)
         {
@@ -127,7 +144,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void AttackBehavior()
+    protected virtual void AttackBehavior()
     {
         if (targetEnemy == null)
         {
@@ -153,7 +170,7 @@ public class EnemyAI : MonoBehaviour
         // Attack if cooldown is ready
         if (Time.time - lastAttackTime >= attackCooldown)
         {
-            PerformAttack();
+            Attack();
             lastAttackTime = Time.time;
         }
     }
@@ -163,14 +180,20 @@ public class EnemyAI : MonoBehaviour
         // Just stand in place
     }
 
-    private void PerformAttack()
+    public virtual IEnumerator Attack()
     {
         // Implement your attack logic here
         Debug.Log("Enemy attacking: " + gameObject.name);
         
-        // Example: Deal damage
-        // if (targetEnemy.TryGetComponent<IDamageable>(out var damageable))
-        //     damageable.TakeDamage(10);
+        yield break;
+    }
+    
+    public void Heal(int _amount)
+    {
+        currentHealth += _amount;
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+        Debug.Log($"Enemy healed for {_amount}. Current Health: {currentHealth}/{maxHealth}");
     }
 
     private void StartPatrol()

@@ -83,7 +83,7 @@ public class AdvancedAIController : MonoBehaviour
         // Rotate
         if (desiredDirection.magnitude > 0.1f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(desiredDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(new Vector3(desiredDirection.x, 0, desiredDirection.z));
             rb.rotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
 
