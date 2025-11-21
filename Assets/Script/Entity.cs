@@ -1,5 +1,9 @@
 using UnityEngine;
 
+
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 public abstract class Entity : MonoBehaviour
 {
     public string ename;

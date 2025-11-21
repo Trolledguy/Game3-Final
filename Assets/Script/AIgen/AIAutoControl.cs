@@ -16,11 +16,22 @@ public abstract class AIAutoControl : Entity , ICharacter
     public int maxHealth { get; set; } = 50;
     public int currentHealth { get; set; } = 50;
     public int baseAttackDamage { get; set; } = 5;
+    public int buffAttackDamage { get; set; } = 0;
+
+    public int _currentAttackDamage
+    {
+        get
+        {
+            return baseAttackDamage + buffAttackDamage;
+        }
+    }
+    
     public float moveSpeed = 3f;
 
     [Header("References")]
     [SerializeField] private AdvancedAIController navigationController;
     [SerializeField] private Transform[] patrolWaypoints;
+    [SerializeField] private Color patrolColor;
     
     [Header("Detection")]
     [SerializeField] private float detectionRange = 15f;
@@ -36,10 +47,24 @@ public abstract class AIAutoControl : Entity , ICharacter
     
     private AIState currentState = AIState.Patrolling;
     private int currentWaypointIndex = 0;
+
+    int _currentWaypointIndex
+    {
+        get { return currentWaypointIndex; }
+        set
+        {
+            if(!(value < 0 || value >= patrolWaypoints.Length))
+            {
+                currentWaypointIndex = value;
+            }
+
+        }
+    }
+
     private Transform targetEnemy;
     private float lastAttackTime = 0f;
     private float detectionTimer = 0.5f;
-    private float detectionCounter = 0f;
+    private float detectionCounter = 1.5f;
 
     private void Start()
     {
@@ -59,6 +84,8 @@ public abstract class AIAutoControl : Entity , ICharacter
             DetectTarget();
             detectionCounter = detectionTimer;
         }
+
+        //eAnim.SetFloat("Speed", eRigi.linearVelocity.magnitude);
 
         Debug.Log("Current State: " + currentState.ToString());
         Debug.Log($"Path Progress : {navigationController.GetPathProgress()}");
@@ -117,13 +144,18 @@ public abstract class AIAutoControl : Entity , ICharacter
             return;
         }
 
-        Transform currentWaypoint = patrolWaypoints[currentWaypointIndex];
+        Transform currentWaypoint = patrolWaypoints[_currentWaypointIndex];
         navigationController.NavigateTo(currentWaypoint.position);
 
         if (navigationController.HasReachedTarget())
         {
-            Debug.Log( this.name + "Reached waypoint : " + currentWaypointIndex);
-            currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Length;
+            Debug.Log( this.name + "Reached waypoint : " + _currentWaypointIndex);
+            for(float t = 0; t < 1f; t += Time.deltaTime)
+            {
+                Debug.Log("Delay");
+            }
+            _currentWaypointIndex++;
+            return;
         }
     }
 
@@ -188,6 +220,16 @@ public abstract class AIAutoControl : Entity , ICharacter
         yield break;
     }
     
+    public void TakeDamage(int _amount)
+    {
+        currentHealth -= _amount;
+        if (currentHealth <= 0)
+        {
+            Debug.Log("Enemy defeated: " + gameObject.name);
+            Destroy(gameObject);
+        }
+    }
+
     public void Heal(int _amount)
     {
         currentHealth += _amount;
@@ -198,8 +240,9 @@ public abstract class AIAutoControl : Entity , ICharacter
 
     private void StartPatrol()
     {
+        Debug.Log("Starting Patrol");
         currentState = AIState.Patrolling;
-        currentWaypointIndex = 0;
+        _currentWaypointIndex = 0;
     }
 
     public AIState GetCurrentState()
@@ -220,7 +263,7 @@ public abstract class AIAutoControl : Entity , ICharacter
         // Draw patrol waypoints
         if (patrolWaypoints != null && patrolWaypoints.Length > 0)
         {
-            Gizmos.color = Color.green;
+            Gizmos.color = patrolColor;
             for (int i = 0; i < patrolWaypoints.Length; i++)
             {
                 Gizmos.DrawSphere(patrolWaypoints[i].position, 0.3f);

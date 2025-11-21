@@ -14,6 +14,16 @@ public class Player : Entity , ICharacter
     public int maxHealth { get; set; } = 100;
     public int currentHealth { get; set; } = 100;
     public int baseAttackDamage { get; set; } = 10;
+    public int buffAttackDamage { get; set; } = 0;
+
+    private int currentAttackDamage;
+    public int _currentAttackDamage
+    {
+        get
+        {
+            return baseAttackDamage +  buffAttackDamage;
+        }
+    }
 
     public float moveSpeed = 5f;
 
@@ -26,15 +36,19 @@ public class Player : Entity , ICharacter
 
     public void Move(Vector3 _direction)
     {
+        eAnim.SetFloat("Speed", _direction.magnitude * 5); // Assuming moveSpeed is a float representing speed
         transform.Translate(_direction * Time.deltaTime * moveSpeed, Space.World);
     }
     public IEnumerator Attack()
     {
+        eAnim.SetTrigger("Attack");
 
+        AnimatorClipInfo animationInfo = eAnim.GetCurrentAnimatorClipInfo(0)[0];
+        float animationLength = animationInfo.clip.length;
         RaycastHit[] hits = null;
     
-        //Chagne to animation time
-        for(float t = 0; t < 1f; t += Time.deltaTime)
+        //Change to animation time
+        for(float t = 0; t < animationLength; t += Time.deltaTime)
         {
             hits = Physics.RaycastAll(tRightHandPos.position, tRightHandPos.up, 2f);
         }
@@ -42,16 +56,18 @@ public class Player : Entity , ICharacter
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                Entity enemyEntity = hit.collider.GetComponent<Entity>();
+                Enemy enemyEntity = hit.collider.GetComponent<Enemy>();
                 if (enemyEntity != null)
                 {
-                    Debug.Log($"Player attacked {enemyEntity.ename} for {baseAttackDamage} damage.");
+                    Debug.Log($"Player attacked {enemyEntity.ename} for {_currentAttackDamage} damage.");
+                    enemyEntity.TakeDamage(_currentAttackDamage);
                     // Here you would typically call a method on the enemy to apply damage
                 }
             }
         }
         yield break;
     }
+
 
     private void HealPlayer(int _amount)
     {

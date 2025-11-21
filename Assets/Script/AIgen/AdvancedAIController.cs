@@ -10,7 +10,6 @@ public class AdvancedAIController : MonoBehaviour
     [SerializeField] private PathfindingGrid pathfindingGrid;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private float stoppingDistance = 0.5f;
     [SerializeField] private float waypointCheckDistance = 1f;
     
     [Header("Vision")]
@@ -134,7 +133,8 @@ public class AdvancedAIController : MonoBehaviour
 
     public bool HasReachedTarget()
     {
-        return !hasTarget;
+        Debug.Log("Distance to target: " + Vector3.Distance(transform.position, currentTarget));
+        return Vector3.Distance(transform.position, currentTarget) < 2;
     }
 
     public float GetPathProgress()
