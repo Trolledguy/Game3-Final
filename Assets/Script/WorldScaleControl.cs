@@ -14,12 +14,7 @@ public class WorldScaleControl : MonoBehaviour
 
     public void ApplyBuffs(AIAutoControl _entity)
     {
-        healthBuff = Mathf.FloorToInt(Vector3.Distance(Vector3.zero, _entity.transform.position) / 10) * 10;
-        damageBuff = Mathf.FloorToInt(Vector3.Distance(Vector3.zero, _entity.transform.position) / 10) * 5;
-
-        _entity.baseHealth += healthBuff;
-        _entity.buffAttackDamage = damageBuff;
-
+        _entity.maxHealth += healthBuff;
     }
 
     private void Setup()

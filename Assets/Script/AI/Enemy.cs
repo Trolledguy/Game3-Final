@@ -1,6 +1,13 @@
 using UnityEngine;
 
-public abstract class Enemy : AIAutoControl
+public class Enemy : AIAutoControl
 {
-    
+    protected override void PatrolBehavior()
+    {
+        base.PatrolBehavior();
+        
+    }
+
+
+
 }

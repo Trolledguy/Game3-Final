@@ -3,8 +3,7 @@ using System.Collections;
 
 public interface ICharacter
 {
-    int baseHealth { get; set; }
-    int buffHealth { get; set; }
+    int maxHealth { get; set; }
     int currentHealth { get; set; }
     int baseAttackDamage { get; set; }
     int buffAttackDamage { get; set; }

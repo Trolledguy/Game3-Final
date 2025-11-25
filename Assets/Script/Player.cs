@@ -11,35 +11,12 @@ public class Player : Entity , ICharacter
     /// Stats
     /// </summary>
 
-    public int baseHealth { get; set; } = 100;
-    public int buffHealth { get; set; } = 0;
+    public int maxHealth { get; set; } = 100;
     public int currentHealth { get; set; } = 100;
     public int baseAttackDamage { get; set; } = 10;
     public int buffAttackDamage { get; set; } = 0;
 
-
-    public int _maxHealth
-    {
-        get
-        {
-            return baseHealth + buffHealth;
-        }
-        set
-        {
-            buffHealth = value;
-            currentHealth += value;
-            if(currentHealth > _maxHealth)
-            {
-                currentHealth = _maxHealth;
-            }
-            else if(currentHealth < 0)
-            {
-                currentHealth = 0;
-                Destroy(this.gameObject);
-            }
-        }
-    }
-
+    private int currentAttackDamage;
     public int _currentAttackDamage
     {
         get
@@ -95,9 +72,9 @@ public class Player : Entity , ICharacter
     private void HealPlayer(int _amount)
     {
         currentHealth += _amount;
-        if (currentHealth > baseHealth)
-            currentHealth = baseHealth;
-        Debug.Log($"Player healed for {_amount}. Current Health: {currentHealth}/{baseHealth}");
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+        Debug.Log($"Player healed for {_amount}. Current Health: {currentHealth}/{maxHealth}");
     }
 
     public void Heal(int _amount)
