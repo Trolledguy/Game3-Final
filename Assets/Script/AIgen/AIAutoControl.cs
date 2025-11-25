@@ -13,10 +13,33 @@ public abstract class AIAutoControl : Entity , ICharacter
     
 
     [Header("AI Stats")]
-    public int maxHealth { get; set; } = 50;
+    public int baseHealth {get; set;} = 50;
+    public int buffHealth { get; set; } = 0;
     public int currentHealth { get; set; } = 50;
     public int baseAttackDamage { get; set; } = 5;
     public int buffAttackDamage { get; set; } = 0;
+
+    public int _maxHealth
+    {
+        get
+        {
+            return baseHealth + buffHealth;
+        }
+        set
+        {
+            buffHealth = value;
+            currentHealth += value;
+            if(currentHealth > _maxHealth)
+            {
+                currentHealth = _maxHealth;
+            }
+            else if(currentHealth < 0)
+            {
+                currentHealth = 0;
+                Destroy(this.gameObject);
+            }
+        }
+    }
 
     public int _currentAttackDamage
     {
@@ -103,6 +126,19 @@ public abstract class AIAutoControl : Entity , ICharacter
             case AIState.Idle:
                 IdleBehavior();
                 break;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        TrackPosition();
+    }
+
+    private void TrackPosition()
+    {
+        if(Vector3.Distance(Vector3.zero,transform.position) % 10 >= 9.5f)
+        {
+            WorldScaleControl.instance.ApplyBuffs(this);
         }
     }
 
@@ -202,7 +238,7 @@ public abstract class AIAutoControl : Entity , ICharacter
         // Attack if cooldown is ready
         if (Time.time - lastAttackTime >= attackCooldown)
         {
-            Attack();
+            StartCoroutine(Attack());
             lastAttackTime = Time.time;
         }
     }
@@ -215,7 +251,16 @@ public abstract class AIAutoControl : Entity , ICharacter
     public virtual IEnumerator Attack()
     {
         // Implement your attack logic here
-        Debug.Log("Enemy attacking: " + gameObject.name);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, attackRange))
+        {
+            ICharacter character = hit.collider.GetComponent<ICharacter>();
+            if (character != null)
+            {
+                character.TakeDamage(_currentAttackDamage);
+                Debug.Log($"{this.name} attacked {hit.collider.name} for {_currentAttackDamage} damage.");
+            }
+        }
         
         yield break;
     }
@@ -233,9 +278,9 @@ public abstract class AIAutoControl : Entity , ICharacter
     public void Heal(int _amount)
     {
         currentHealth += _amount;
-        if (currentHealth > maxHealth)
-            currentHealth = maxHealth;
-        Debug.Log($"Enemy healed for {_amount}. Current Health: {currentHealth}/{maxHealth}");
+        if (currentHealth > baseHealth)
+            currentHealth = baseHealth;
+        Debug.Log($"Enemy healed for {_amount}. Current Health: {currentHealth}/{baseHealth}");
     }
 
     private void StartPatrol()
