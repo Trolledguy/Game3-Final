@@ -13,6 +13,9 @@ public class InputController : MonoBehaviour
     }
     private void HandleRotation()
     {
+        if(UIManager.instance.isPaused) 
+            return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
         float rayDistance;
@@ -36,9 +39,13 @@ public class InputController : MonoBehaviour
         
     private void HandleActions()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && !UIManager.instance.isPaused)
         {
             targetPlayer.StartCoroutine(targetPlayer.Attack());
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.instance.TogglePauseMenu(!UIManager.instance.isPaused);
         }
     }
 }
