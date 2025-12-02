@@ -7,7 +7,7 @@ public class Teleporter : MonoBehaviour
 {
     public string targetScene;
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {

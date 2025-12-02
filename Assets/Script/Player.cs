@@ -17,6 +17,8 @@ public class Player : Entity , ICharacter
     public int baseAttackDamage { get; set; } = 10;
     public int buffAttackDamage { get; set; } = 0;
 
+    public bool ishasKey = false;
+
 
     public int _maxHealth
     {
