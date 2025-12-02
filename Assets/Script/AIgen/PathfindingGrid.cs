@@ -10,8 +10,8 @@ public class PathfindingGrid : MonoBehaviour
     [Header("Grid Settings")]
     [SerializeField] private Vector3 gridOrigin = Vector3.zero;
     [SerializeField] private float cellSize = 1f;
-    [SerializeField] private int gridWidth = 50;
-    [SerializeField] private int gridHeight = 50;
+    [SerializeField] public int gridWidth = 50;
+    [SerializeField] public int gridHeight = 50;
     [SerializeField] private LayerMask obstacleLayer;
     
     [Header("Raycast Settings")]
@@ -168,7 +168,7 @@ public class PathfindingGrid : MonoBehaviour
         return null;
     }
 
-    private Vector3 GetWorldPosition(int x, int y)
+    public Vector3 GetWorldPosition(int x, int y)
     {
         return gridOrigin + new Vector3(x * cellSize + cellSize / 2f, 0, y * cellSize + cellSize / 2f);
     }
