@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -14,12 +15,17 @@ public class UIManager : MonoBehaviour
     public Texture2D cursorTexture;
 
     [Header("Pause Menu")]
+    public bool isPaused = false;
+
     public GameObject pauseMenu;
     public Button resumeButton;
     public Button quitButton;
-    
-    public bool isPaused = false;
 
+    [Header("Win Screen")]
+    public GameObject winScreen;
+    public Button winQuitButton;
+    
+    
     void Awake()
     {
         TogglePauseMenu(false);
@@ -39,7 +45,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    
+    public void ShowWinScreen()
+    {
+        Time.timeScale = 0f;
+        winScreen.SetActive(true);
+    }
+
+    public void ShowLoseScreen()
+    {
+        Time.timeScale = 0f;
+        TogglePauseMenu(true);
+    }
 
     private void Setup()
     {
@@ -48,8 +64,23 @@ public class UIManager : MonoBehaviour
             instance = this;
         }
 
-        resumeButton.onClick.AddListener(() => TogglePauseMenu(false));
-        quitButton.onClick.AddListener(() => Application.Quit());
+        resumeButton.onClick.AddListener(delegate 
+        { 
+            if(playerUI == null)
+            {
+                SceneManager.LoadScene(0);
+                return;
+            }
+            else
+            {
+                TogglePauseMenu(false);
+            }
+        });
+        winQuitButton.onClick.AddListener(() => SceneManager.LoadScene(0));
+        quitButton.onClick.AddListener(() => SceneManager.LoadScene("Menu Scene"));
+
+
+        winScreen.SetActive(false);
         
     }
 
