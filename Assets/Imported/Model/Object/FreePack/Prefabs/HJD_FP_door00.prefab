@@ -57,6 +57,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -78,6 +80,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -370,9 +373,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05330103679337045b17c18b0d41577a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8208411731178698345}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05330103679337045b17c18b0d41577a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6983869072611311343}
   m_SourcePrefab: {fileID: 100100000, guid: 05330103679337045b17c18b0d41577a, type: 3}
 --- !u!4 &5831047147603547651 stripped
 Transform:
@@ -405,21 +405,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.14999998, y: 1, z: 1}
   m_Center: {x: 0.425, y: 0.5, z: 0}
---- !u!114 &6983869072611311343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6604487965849062585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84008e6f9707964488aafaf8bfc85d16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Name: 
-  interactionTextUI: {fileID: 0}
-  isInteractable: 1
-  openOffset: {x: 2, y: 0, z: 0}
-  slideSpeed: 2
-  door: {fileID: 6292382606818057952}
