@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 [RequireComponent(typeof(Collider))]
@@ -21,10 +22,17 @@ public abstract class Interactable : MonoBehaviour
 
     private void IterSetup()
     {
-        Collider col = GetComponent<Collider>();
-        if (!col.isTrigger)
+        try
         {
-            col.isTrigger = true;
-        }   
+            Collider col = GetComponent<BoxCollider>();
+            if (!col.isTrigger)
+            {
+                col.isTrigger = true;
+            }   
+        }
+        catch (MissingComponentException)
+        {
+            return;
+        }
     }
 }

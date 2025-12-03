@@ -12,7 +12,7 @@ public class Teleporter : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Teleporting to " + targetScene);
-            //SceneManager.LoadScene(targetScene);
+            SceneManager.LoadScene(targetScene);
         }
     }
 }
