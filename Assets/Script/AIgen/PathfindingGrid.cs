@@ -20,6 +20,9 @@ public class PathfindingGrid : MonoBehaviour
     private GridNode[,] grid;
     private bool isInitialized = false;
 
+    [Header("Patrol Path trace")]
+    public Transform[] patrolPoints;
+
     private void Start()
     {
         InitializeGrid();

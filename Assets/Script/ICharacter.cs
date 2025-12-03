@@ -17,7 +17,12 @@ public interface ICharacter
             currentHealth -= _amount;
             if (currentHealth <= 0)
             {
+                if(entity.GetComponent<Player>())
+                {
+                    UIManager.instance.ShowLoseScreen();
+                }
                 Debug.Log("Entity defeated: " + entity.ename);
+                
                 Object.Destroy(entity.gameObject);
             }
         }

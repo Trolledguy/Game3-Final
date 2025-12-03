@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
         if (pathfindingGrid == null)
         {
-            pathfindingGrid = FindObjectOfType<PathfindingGrid>();
+            pathfindingGrid = FindAnyObjectByType<PathfindingGrid>();
         }
     }
 

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,7 @@ public class UIManager : MonoBehaviour
     public bool isPaused = false;
 
     public GameObject pauseMenu;
+    public TMP_Text pauseTitleText;
     public Button resumeButton;
     public Button quitButton;
 
@@ -54,6 +56,7 @@ public class UIManager : MonoBehaviour
     public void ShowLoseScreen()
     {
         Time.timeScale = 0f;
+        pauseTitleText.text = "You Lose!";
         TogglePauseMenu(true);
     }
 
@@ -77,7 +80,7 @@ public class UIManager : MonoBehaviour
             }
         });
         winQuitButton.onClick.AddListener(() => SceneManager.LoadScene(0));
-        quitButton.onClick.AddListener(() => SceneManager.LoadScene("Menu Scene"));
+        quitButton.onClick.AddListener(() => Application.Quit());
 
 
         winScreen.SetActive(false);

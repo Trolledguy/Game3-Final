@@ -21,4 +21,6 @@ public abstract class Item : Interactable
             Debug.LogWarning("ItemInfomation is not assigned for " + gameObject.name);
         }
     }
+
+    
 }

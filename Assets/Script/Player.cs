@@ -2,6 +2,8 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+[RequireComponent(typeof(AudioSource))]
 public class Player : Entity , ICharacter
 {
     //[SerializeField]
@@ -56,17 +58,27 @@ public class Player : Entity , ICharacter
     public Transform tRightHandPos;
     public Transform tLeftHandPos;
 
+    public AudioSource audioSource;
+    public AudioClip attackSound;
+    public AudioClip walkSound;
+
     //Item
     //Invent
 
     public void Move(Vector3 _direction)
     {
         eAnim.SetFloat("Speed", _direction.magnitude * 5); // Assuming moveSpeed is a float representing speed
+        if(!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(walkSound);
+        }
         transform.Translate(_direction * Time.deltaTime * moveSpeed, Space.World);
+        
     }
     public IEnumerator Attack()
     {
         eAnim.SetTrigger("Attack");
+        audioSource.PlayOneShot(attackSound);
 
         AnimatorClipInfo animationInfo = eAnim.GetCurrentAnimatorClipInfo(0)[0];
         float animationLength = animationInfo.clip.length;

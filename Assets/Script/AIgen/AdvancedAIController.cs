@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class AdvancedAIController : MonoBehaviour
 {
     [Header("Navigation")]
-    [SerializeField] private PathfindingGrid pathfindingGrid;
+    [SerializeField] public PathfindingGrid pathfindingGrid;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float waypointCheckDistance = 1f;
@@ -133,7 +133,6 @@ public class AdvancedAIController : MonoBehaviour
 
     public bool HasReachedTarget()
     {
-        Debug.Log("Distance to target: " + Vector3.Distance(transform.position, currentTarget));
         return Vector3.Distance(transform.position, currentTarget) < 2;
     }
 

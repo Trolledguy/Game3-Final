@@ -91,6 +91,8 @@ public abstract class AIAutoControl : Entity , ICharacter
 
     private void Start()
     {
+        patrolWaypoints = navigationController.pathfindingGrid.patrolPoints;
+
         if (navigationController == null)
             navigationController = GetComponent<AdvancedAIController>();
         
@@ -110,8 +112,6 @@ public abstract class AIAutoControl : Entity , ICharacter
 
         //eAnim.SetFloat("Speed", eRigi.linearVelocity.magnitude);
 
-        Debug.Log("Current State: " + currentState.ToString());
-        Debug.Log($"Path Progress : {navigationController.GetPathProgress()}");
         switch (currentState)
         {
             case AIState.Patrolling:
@@ -312,8 +312,8 @@ public abstract class AIAutoControl : Entity , ICharacter
             for (int i = 0; i < patrolWaypoints.Length; i++)
             {
                 Gizmos.DrawSphere(patrolWaypoints[i].position, 0.3f);
-                if (i < patrolWaypoints.Length - 1)
-                    Gizmos.DrawLine(patrolWaypoints[i].position, patrolWaypoints[i + 1].position);
+                //if (i < patrolWaypoints.Length - 1)
+                //Gizmos.DrawLine(patrolWaypoints[i].position, patrolWaypoints[i + 1].position);
             }
         }
     }
